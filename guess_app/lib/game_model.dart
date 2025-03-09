@@ -5,6 +5,7 @@ import 'package:guess_app/dataset.dart';
 
 const gameSeconds = 10;
 
+/// Handles logic of currently running game
 class GameModel extends ChangeNotifier {
   final GameTopic topic;
 
@@ -40,13 +41,6 @@ class GameModel extends ChangeNotifier {
     current = _list.first;
   }
 
-  /// Move to next card (correct answer)
-  void next() {
-    results.add((current, true));
-    score++;
-    _step();
-  }
-
   /// Start game
   void start() {
     // start countdown
@@ -62,6 +56,19 @@ class GameModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Move to next card (correct answer)
+  void next() {
+    results.add((current, true));
+    score++;
+    _step();
+  }
+
+  /// Skip to next card (miss answer)
+  void skip() {
+    results.add((current, false));
+    _step();
+  }
+
   /// Move 1 step (cycle around)
   void _step() {
     // wrap around for index safety
@@ -70,12 +77,6 @@ class GameModel extends ChangeNotifier {
 
     current = _list[_pos];
     notifyListeners();
-  }
-
-  /// Skip to next card (miss answer)
-  void skip() {
-    results.add((current, false));
-    _step();
   }
 
   void _onGameEnd() {

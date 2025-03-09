@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'settings_service.dart';
+part of 'db_service.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator

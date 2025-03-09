@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:guess_app/screens/main_menu.dart';
 import 'package:guess_app/settings_model.dart';
-import 'package:guess_app/settings_service.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:guess_app/db_service.dart';
+import 'package:guess_app/topic_manager.dart';
+
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp(service: DBService(await initIsar())));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final DBService service;
+
+  const MyApp({super.key, required this.service});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SettingsModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SettingsModel(service)),
+        ChangeNotifierProvider(create: (context) => TopicManager(service)),
+      ],
       child: Consumer<SettingsModel>(
         builder: (context, settings, child) => MaterialApp(
           title: '...',

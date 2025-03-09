@@ -41,7 +41,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
                 setState(() {
                   settings.setDarkMode(value);
                 });
-                print(settings.isDarkMode());
               },
             ),
           ],
