@@ -1,3 +1,10 @@
+# platform things
+android/
+linux/
+macos/
+windows/
+web/
+
 # Miscellaneous
 *.class
 *.log

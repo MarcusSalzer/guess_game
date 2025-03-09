@@ -26,8 +26,6 @@ class SettingsMenu extends StatefulWidget {
 }
 
 class _SettingsMenuState extends State<SettingsMenu> {
-  // DO we actually need state here??
-  // bool darkMode = false;
   @override
   Widget build(BuildContext context) {
     SettingsModel settings = Provider.of<SettingsModel>(context, listen: false);
@@ -38,13 +36,12 @@ class _SettingsMenuState extends State<SettingsMenu> {
           children: [
             Text("Dark mode"),
             Switch(
-              value: settings.darkMode,
+              value: settings.isDarkMode(),
               onChanged: (bool value) {
                 setState(() {
-                  // darkMode = value;
-                  settings.darkMode = value;
+                  settings.setDarkMode(value);
                 });
-                print(value);
+                print(settings.isDarkMode());
               },
             ),
           ],

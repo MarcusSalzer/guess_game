@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:guess_app/screens/main_menu.dart';
 import 'package:guess_app/settings_model.dart';
+import 'package:guess_app/settings_service.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -14,17 +17,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => SettingsModel(),
-      child: MaterialApp(
-        title: '...',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 58, 183, 125)),
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        home: Scaffold(
-          body: MainMenu(),
+      child: Consumer<SettingsModel>(
+        builder: (context, settings, child) => MaterialApp(
+          title: '...',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+          ),
+          themeMode: settings.isDarkMode() ? ThemeMode.dark : ThemeMode.light,
+          home: Scaffold(
+            body: MainMenu(),
+          ),
         ),
       ),
     );
