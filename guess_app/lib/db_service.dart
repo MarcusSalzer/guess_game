@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:guess_app/dataset.dart';
 import 'package:guess_app/settings_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,10 +18,12 @@ class Preferences {
 /// Hold queue state for each topic
 @collection
 class TopicState {
-  Id id = Isar.autoIncrement;
-  String topicName;
+  Id id; // only valid topic indices
   List<int> queue = [];
-  TopicState(this.topicName);
+  // TODO, how to save remember and load these...
+  int pos = 0; // where are we
+
+  TopicState(this.id, this.queue);
 }
 
 class DBService {
@@ -45,7 +48,26 @@ class DBService {
   }
 
   /// Save topic state
-  // TODO!
+  Future<void> saveTopicQueue(GameTopic topic, List<int> queue) async {
+    final tState = TopicState(topic.index, queue);
+    await _isar.writeTxn(() async {
+      await _isar.topicStates.put(tState);
+    });
+    print("saved topic state");
+  }
+
+  /// Load queue for a topic, return null if not found
+  Future<List<int>?> loadTopicQueue(GameTopic topic) async {
+    final tState = await _isar.txn(() async {
+      return await _isar.topicStates.get(topic.index);
+    });
+    if (tState != null) {
+      print("found & loaded topic state");
+    } else {
+      print("topic state NOT found");
+    }
+    return tState?.queue;
+  }
 }
 
 /// Initialize DB connection
@@ -54,6 +76,7 @@ Future<Isar> initIsar() async {
   final path = p.join(docDir.path, 'guess_app');
   // Ensure storage folder exists
   Directory(path).createSync();
-  final isar = await Isar.open([PreferencesSchema], directory: path);
+  final isar =
+      await Isar.open([PreferencesSchema, TopicStateSchema], directory: path);
   return isar;
 }

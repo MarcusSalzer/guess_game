@@ -7,21 +7,23 @@ import 'package:guess_app/topic_manager.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  // note: we need the DB to be ready to read user prefs when starting app
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp(service: DBService(await initIsar())));
+  runApp(MyApp(dbService: DBService(await initIsar())));
 }
 
 class MyApp extends StatelessWidget {
-  final DBService service;
+  final DBService dbService;
 
-  const MyApp({super.key, required this.service});
+  const MyApp({super.key, required this.dbService});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      // Settings and Topics are globally accesible
       providers: [
-        ChangeNotifierProvider(create: (context) => SettingsModel(service)),
-        ChangeNotifierProvider(create: (context) => TopicManager(service)),
+        ChangeNotifierProvider(create: (context) => SettingsModel(dbService)),
+        ChangeNotifierProvider(create: (context) => TopicManager(dbService)),
       ],
       child: Consumer<SettingsModel>(
         builder: (context, settings, child) => MaterialApp(
@@ -31,8 +33,10 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           darkTheme: ThemeData(
-            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.green, brightness: Brightness.dark),
             brightness: Brightness.dark,
+            useMaterial3: true,
           ),
           themeMode: settings.isDarkMode() ? ThemeMode.dark : ThemeMode.light,
           home: Scaffold(

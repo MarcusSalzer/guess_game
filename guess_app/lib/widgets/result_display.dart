@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:guess_app/game_model.dart';
 import 'package:guess_app/screens/game_screen.dart';
-import 'package:guess_app/screens/main_menu.dart';
 import 'package:provider/provider.dart';
 
 // TODO: Separate results screen?
@@ -44,7 +43,8 @@ class ResultDisplay extends StatelessWidget {
             children: [
               TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.pop(context);
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         // replay same topic
@@ -55,13 +55,14 @@ class ResultDisplay extends StatelessWidget {
                   child: const Text("Play again")),
               TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        // back home
-                        builder: (context) => const MainMenu(),
-                      ),
-                    );
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     // back home
+                    //     builder: (context) => const MainMenu(),
+                    //   ),
+                    // );
+                    Navigator.pop(context);
                   },
                   child: const Text("Main menu")),
             ],

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:guess_app/dataset.dart';
 
-const gameSeconds = 10;
+const gameSeconds = 5;
 
 /// Handles logic of currently running game
 class GameModel extends ChangeNotifier {
@@ -22,18 +22,7 @@ class GameModel extends ChangeNotifier {
   List<(String, bool)> results = [];
 
   GameModel(this.topic) {
-    switch (topic) {
-      case GameTopic.countries:
-        _list = countriesList;
-        break;
-      case GameTopic.sports:
-        _list = sportsList;
-        break;
-      case GameTopic.music:
-        _list = musicList;
-        break;
-    }
-
+    _list = topic.items;
     if (_list.isEmpty) {
       throw ArgumentError('Requires non-empty list');
     }
